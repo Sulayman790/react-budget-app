@@ -1,19 +1,55 @@
 import { Form, Modal, Button } from "react-bootstrap"
-import { useRef } from "react"
+import { useRef, useState} from "react"
 import { useBudgets } from "../contexts/BudgetsContext"
+import Select from 'react-select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+  faUtensils, 
+  faHome, 
+  faGamepad, 
+  faFootballBall, 
+  faGasPump, 
+  faGift, 
+  faShoppingBasket 
+} from '@fortawesome/free-solid-svg-icons';
+
+const predefinedCategories = [
+  { value: 'Restaurant', label: 'Restaurant', icon: faUtensils },
+  { value: 'Rent', label: 'Rent', icon: faHome },
+  { value: 'Hobbies', label: 'Hobbies', icon: faGamepad },
+  { value: 'Sport', label: 'Sport', icon: faFootballBall },
+  { value: 'Gas', label: 'Gas', icon: faGasPump },
+  { value: 'Gift', label: 'Gift', icon: faGift },
+  { value: 'Food', label: 'Food', icon: faShoppingBasket },
+];
 
 export default function AddBudgetModal({ show, handleClose }) {
-  const nameRef = useRef()
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const maxRef = useRef()
   const { addBudget } = useBudgets()
   function handleSubmit(e) {
     e.preventDefault()
     addBudget({
-      name: nameRef.current.value,
+      name: selectedCategory ? selectedCategory.label : '',
       max: parseFloat(maxRef.current.value),
     })
     handleClose()
   }
+
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      display: 'flex',
+      alignItems: 'center',
+    }),
+  };
+
+  const formatOptionLabel = ({ value, label, icon }) => (
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      {icon && <FontAwesomeIcon icon={icon} style={{ marginRight: '10px' }} />}
+      <span>{label}</span>
+    </div>
+  );
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -24,7 +60,17 @@ export default function AddBudgetModal({ show, handleClose }) {
         <Modal.Body>
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Name</Form.Label>
-            <Form.Control ref={nameRef} type="text" required />
+            <Select
+              value={selectedCategory}
+              onChange={setSelectedCategory}
+              options={predefinedCategories}
+              styles={customStyles}
+              formatOptionLabel={formatOptionLabel}
+              isClearable
+              isSearchable
+              placeholder="Select or type a category"
+              noOptionsMessage={() => "Type to add a new category"}
+            />
           </Form.Group>
           <Form.Group className="mb-3" controlId="max">
             <Form.Label>Maximum Spending</Form.Label>
@@ -44,5 +90,5 @@ export default function AddBudgetModal({ show, handleClose }) {
         </Modal.Body>
       </Form>
     </Modal>
-  )
+  );
 }
