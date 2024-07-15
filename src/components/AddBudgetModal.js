@@ -1,7 +1,7 @@
-import { Form, Modal, Button } from "react-bootstrap"
-import { useRef, useState} from "react"
-import { useBudgets } from "../contexts/BudgetsContext"
-import Select from 'react-select';
+import React, { useRef, useState } from "react";
+import { Form, Modal, Button } from "react-bootstrap";
+import { useBudgets } from "../contexts/BudgetsContext";
+import CreatableSelect from 'react-select/creatable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faUtensils, 
@@ -25,15 +25,16 @@ const predefinedCategories = [
 
 export default function AddBudgetModal({ show, handleClose }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const maxRef = useRef()
-  const { addBudget } = useBudgets()
+  const maxRef = useRef();
+  const { addBudget } = useBudgets();
+
   function handleSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
     addBudget({
-      name: selectedCategory ? selectedCategory.label : '',
+      name: selectedCategory ? selectedCategory.value : '',
       max: parseFloat(maxRef.current.value),
-    })
-    handleClose()
+    });
+    handleClose();
   }
 
   const customStyles = {
@@ -51,6 +52,12 @@ export default function AddBudgetModal({ show, handleClose }) {
     </div>
   );
 
+  const handleCreate = (inputValue) => {
+    const newOption = { value: inputValue, label: inputValue };
+    setSelectedCategory(newOption);
+  };
+
+
   return (
     <Modal show={show} onHide={handleClose}>
       <Form onSubmit={handleSubmit}>
@@ -60,16 +67,15 @@ export default function AddBudgetModal({ show, handleClose }) {
         <Modal.Body>
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Name</Form.Label>
-            <Select
+            <CreatableSelect
               value={selectedCategory}
               onChange={setSelectedCategory}
+              onCreateOption={handleCreate}
               options={predefinedCategories}
               styles={customStyles}
               formatOptionLabel={formatOptionLabel}
               isClearable
-              isSearchable
               placeholder="Select or type a category"
-              noOptionsMessage={() => "Type to add a new category"}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="max">

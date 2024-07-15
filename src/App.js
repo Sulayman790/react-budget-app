@@ -14,7 +14,7 @@ function App() {
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false)
   const [viewExpensesModalBudgetId, setViewExpensesModalBudgetId] = useState()
   const [addExpenseModalBudgetId, setAddExpenseModalBudgetId] = useState()
-  const { budgets, getBudgetExpenses } = useBudgets()
+  const { budgets, getBudgetExpenses, deleteBudget } = useBudgets()
 
   function openAddExpenseModal(budgetId) {
     setShowAddExpenseModal(true)
@@ -56,6 +56,7 @@ function App() {
                 onViewExpensesClick={() =>
                   setViewExpensesModalBudgetId(budget.id)
                 }
+                onDeleteBudgetClick = {() => deleteBudget({ id: budget.id })}
               />
             )
           })}

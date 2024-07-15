@@ -1,13 +1,40 @@
+import React from "react"
 import { Button, Card, ProgressBar, Stack } from "react-bootstrap"
 import { currencyFormatter } from "../utils"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { 
+  faUtensils, 
+  faHome, 
+  faGamepad, 
+  faFootballBall, 
+  faGasPump, 
+  faGift, 
+  faShoppingBasket,
+  faTrash,
+  faQuestionCircle 
+} from '@fortawesome/free-solid-svg-icons'
+
+// Define an object to map category names to icons
+const categoryIcons = {
+  'Restaurant': faUtensils,
+  'Rent': faHome,
+  'Hobbies': faGamepad,
+  'Sport': faFootballBall,
+  'Gas': faGasPump,
+  'Gift': faGift,
+  'Food': faShoppingBasket,
+  'Uncategorized': faQuestionCircle
+}
 
 export default function BudgetCard({
+  id,
   name,
   amount,
   max,
   gray,
   hideButtons,
   onAddExpenseClick,
+  onDeleteBudgetClick,
   onViewExpensesClick,
 }) {
   const classNames = []
@@ -17,11 +44,16 @@ export default function BudgetCard({
     classNames.push("bg-light")
   }
 
+  const icon = categoryIcons[name]
+
   return (
     <Card className={classNames.join(" ")}>
       <Card.Body>
         <Card.Title className="d-flex justify-content-between align-items-baseline fw-normal mb-3">
-          <div className="me-2">{name}</div>
+          <div className="me-2 d-flex align-items-center">
+            {icon && <FontAwesomeIcon icon={icon} className="me-2" />}
+            {name}
+          </div>
           <div className="d-flex align-items-baseline">
             {currencyFormatter.format(amount)}
             {max && (
@@ -51,6 +83,9 @@ export default function BudgetCard({
             </Button>
             <Button onClick={onViewExpensesClick} variant="outline-secondary">
               View Expenses
+            </Button>
+            <Button onClick={() => onDeleteBudgetClick(id)} variant="outline-danger">
+              <FontAwesomeIcon icon={faTrash} />
             </Button>
           </Stack>
         )}
