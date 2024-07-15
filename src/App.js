@@ -3,6 +3,7 @@ import Container from "react-bootstrap/Container"
 import AddBudgetModal from "./components/AddBudgetModal"
 import AddExpenseModal from "./components/AddExpenseModal"
 import ViewExpensesModal from "./components/ViewExpensesModal"
+import SetGlobalBudgetModal from "./components/SetGlobalBudgetModal";
 import BudgetCard from "./components/BudgetCard"
 import UncategorizedBudgetCard from "./components/UncategorizedBudgetCard"
 import TotalBudgetCard from "./components/TotalBudgetCard"
@@ -14,6 +15,7 @@ import { UNCATEGORIZED_BUDGET_ID, useBudgets } from "./contexts/BudgetsContext"
 function App() {
   const [showAddBudgetModal, setShowAddBudgetModal] = useState(false)
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false)
+  const [showSetGlobalBudgetModal, setShowSetGlobalBudgetModal] = useState(false)
   const [viewExpensesModalBudgetId, setViewExpensesModalBudgetId] = useState()
   const [addExpenseModalBudgetId, setAddExpenseModalBudgetId] = useState()
   const { budgets, getBudgetExpenses, deleteBudget, setGlobalMonthlyBudget } = useBudgets()
@@ -33,6 +35,9 @@ function App() {
           </Button>
           <Button variant="outline-primary" onClick={openAddExpenseModal}>
             Add Expense
+          </Button>
+          <Button variant="outline-secondary" onClick={() => setShowSetGlobalBudgetModal(true)}>
+            Set Global Budget
           </Button>
         </Stack>
         <div style={{ marginBottom: "1rem" }}>
@@ -86,6 +91,10 @@ function App() {
       <ViewExpensesModal
         budgetId={viewExpensesModalBudgetId}
         handleClose={() => setViewExpensesModalBudgetId()}
+      />
+      <SetGlobalBudgetModal 
+        show={showSetGlobalBudgetModal}
+        handleClose={() => setShowSetGlobalBudgetModal(false)}
       />
     </>
   )
