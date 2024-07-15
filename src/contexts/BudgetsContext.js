@@ -1,10 +1,11 @@
-import React, { useContext } from "react"
+import React, { useContext, useEffect} from "react"
 import { v4 as uuidV4 } from "uuid"
 import useLocalStorage from "../hooks/useLocalStorage"
 
 const BudgetsContext = React.createContext()
 
 export const UNCATEGORIZED_BUDGET_ID = "Uncategorized"
+export const GLOBAL_BUDGET_ID = "Global"
 
 export function useBudgets() {
   return useContext(BudgetsContext)
@@ -13,6 +14,19 @@ export function useBudgets() {
 export const BudgetsProvider = ({ children }) => {
   const [budgets, setBudgets] = useLocalStorage("budgets", [])
   const [expenses, setExpenses] = useLocalStorage("expenses", [])
+  const [ globalBudget, setGlobalBudget ] = useLocalStorage("globalBudget", { 
+    amount: 0,
+    lastResetDate: new Date().toISOString() 
+  })
+
+  useEffect(() => {
+    const today = new Date()
+    const lastResetDate = new Date(globalBudget.lastResetDate)
+    if (today.getMonth() !== lastResetDate.getMonth() || today.getFullYear() !== lastResetDate.getFullYear()) {
+      resetBudgets()
+    }
+  }, [globalBudget.lastResetDate])
+
 
   function getBudgetExpenses(budgetId) {
     return expenses.filter(expense => expense.budgetId === budgetId)
@@ -49,16 +63,28 @@ export const BudgetsProvider = ({ children }) => {
     })
   }
 
+  function setGlobalMonthlyBudget(amount) {
+    setGlobalBudget({ amount, lastResetDate: new Date().toISOString() })
+  }
+
+  function resetBudgets() {
+    setExpenses([])
+    setBudgets([])
+    setGlobalBudget(prev => ({ ...prev, lastResetDate: new Date().toISOString() }))
+  }
+
   return (
     <BudgetsContext.Provider
       value={{
         budgets,
         expenses,
+        globalBudget: globalBudget.amount,
         getBudgetExpenses,
         addExpense,
         addBudget,
         deleteBudget,
         deleteExpense,
+        setGlobalMonthlyBudget,
       }}
     >
       {children}

@@ -6,15 +6,17 @@ import ViewExpensesModal from "./components/ViewExpensesModal"
 import BudgetCard from "./components/BudgetCard"
 import UncategorizedBudgetCard from "./components/UncategorizedBudgetCard"
 import TotalBudgetCard from "./components/TotalBudgetCard"
+import GlobalBudgetCard from "./components/GlobalBudgetCard"
 import { useState } from "react"
 import { UNCATEGORIZED_BUDGET_ID, useBudgets } from "./contexts/BudgetsContext"
+
 
 function App() {
   const [showAddBudgetModal, setShowAddBudgetModal] = useState(false)
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false)
   const [viewExpensesModalBudgetId, setViewExpensesModalBudgetId] = useState()
   const [addExpenseModalBudgetId, setAddExpenseModalBudgetId] = useState()
-  const { budgets, getBudgetExpenses, deleteBudget } = useBudgets()
+  const { budgets, getBudgetExpenses, deleteBudget, setGlobalMonthlyBudget } = useBudgets()
 
   function openAddExpenseModal(budgetId) {
     setShowAddExpenseModal(true)
@@ -33,6 +35,9 @@ function App() {
             Add Expense
           </Button>
         </Stack>
+        <div style={{ marginBottom: "1rem" }}>
+          <GlobalBudgetCard />
+        </div>
         <div
           style={{
             display: "grid",
