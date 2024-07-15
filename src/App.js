@@ -18,7 +18,7 @@ function App() {
   const [showSetGlobalBudgetModal, setShowSetGlobalBudgetModal] = useState(false)
   const [viewExpensesModalBudgetId, setViewExpensesModalBudgetId] = useState()
   const [addExpenseModalBudgetId, setAddExpenseModalBudgetId] = useState()
-  const { budgets, getBudgetExpenses, deleteBudget, setGlobalMonthlyBudget } = useBudgets()
+  const { budgets, getBudgetExpenses, deleteBudget, globalBudget  } = useBudgets()
 
   function openAddExpenseModal(budgetId) {
     setShowAddExpenseModal(true)
@@ -36,8 +36,11 @@ function App() {
           <Button variant="outline-primary" onClick={openAddExpenseModal}>
             Add Expense
           </Button>
-          <Button variant="outline-secondary" onClick={() => setShowSetGlobalBudgetModal(true)}>
-            Set Global Budget
+          <Button 
+            variant="outline-secondary" 
+            onClick={() => setShowSetGlobalBudgetModal(true)}
+          >
+            {globalBudget > 0 ? "Modify Global Budget" : "Set Global Budget"}
           </Button>
         </Stack>
         <div style={{ marginBottom: "1rem" }}>
