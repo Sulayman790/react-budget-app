@@ -11,7 +11,8 @@ import {
   faGift, 
   faShoppingBasket,
   faTrash,
-  faQuestionCircle 
+  faQuestionCircle, 
+  faTshirt
 } from '@fortawesome/free-solid-svg-icons'
 
 // Define an object to map category names to icons
@@ -23,6 +24,7 @@ const categoryIcons = {
   'Gas': faGasPump,
   'Gift': faGift,
   'Food': faShoppingBasket,
+  'Clothes': faTshirt, 
   'Uncategorized': faQuestionCircle
 }
 

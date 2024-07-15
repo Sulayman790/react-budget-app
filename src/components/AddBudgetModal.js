@@ -10,7 +10,8 @@ import {
   faFootballBall, 
   faGasPump, 
   faGift, 
-  faShoppingBasket 
+  faShoppingBasket,
+  faTshirt
 } from '@fortawesome/free-solid-svg-icons';
 
 const predefinedCategories = [
@@ -21,6 +22,7 @@ const predefinedCategories = [
   { value: 'Gas', label: 'Gas', icon: faGasPump },
   { value: 'Gift', label: 'Gift', icon: faGift },
   { value: 'Food', label: 'Food', icon: faShoppingBasket },
+  { value: 'Clothes', label: 'Clothes', icon: faTshirt }
 ];
 
 export default function AddBudgetModal({ show, handleClose }) {
