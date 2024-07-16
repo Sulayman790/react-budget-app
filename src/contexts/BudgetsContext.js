@@ -18,6 +18,10 @@ export const BudgetsProvider = ({ children }) => {
     amount: 0,
     lastResetDate: new Date().toISOString() 
   })
+  const [monthlySalary, setMonthlySalary] = useLocalStorage("monthlySalary", { 
+    amount: 0, 
+    lastResetDate: new Date().toISOString() 
+  })
 
   useEffect(() => {
     const today = new Date()
@@ -67,10 +71,15 @@ export const BudgetsProvider = ({ children }) => {
     setGlobalBudget({ amount, lastResetDate: new Date().toISOString() })
   }
 
+  function setMonthlySalaryAmount(amount) {
+    setMonthlySalary({ amount, lastResetDate: new Date().toISOString() })
+  }
+
   function resetBudgets() {
     setExpenses([])
     setBudgets([])
     setGlobalBudget(prev => ({ ...prev, lastResetDate: new Date().toISOString() }))
+    setMonthlySalary(prev => ({ ...prev, lastResetDate: new Date().toISOString() }))
   }
 
   return (
@@ -79,12 +88,14 @@ export const BudgetsProvider = ({ children }) => {
         budgets,
         expenses,
         globalBudget: globalBudget.amount,
+        monthlySalary: monthlySalary.amount,
         getBudgetExpenses,
         addExpense,
         addBudget,
         deleteBudget,
         deleteExpense,
         setGlobalMonthlyBudget,
+        setMonthlySalaryAmount,
       }}
     >
       {children}
