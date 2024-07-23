@@ -1,6 +1,5 @@
-import { Button, Stack, Nav } from "react-bootstrap"
-import Container from "react-bootstrap/Container"
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
+import { Button, Stack, Nav, Container } from "react-bootstrap"
+import { BrowserRouter as Router, Route, Routes, Link, Navigate} from 'react-router-dom'
 import AddBudgetModal from "./components/AddBudgetModal"
 import AddExpenseModal from "./components/AddExpenseModal"
 import ViewExpensesModal from "./components/ViewExpensesModal"
@@ -10,8 +9,10 @@ import UncategorizedBudgetCard from "./components/UncategorizedBudgetCard"
 import TotalBudgetCard from "./components/TotalBudgetCard"
 import GlobalBudgetCard from "./components/GlobalBudgetCard"
 import SavingsPage from "./components/Savings" 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import Login from "./components/Login";
 import { UNCATEGORIZED_BUDGET_ID, useBudgets } from "./contexts/BudgetsContext"
+import { auth } from "./firebase";
 
 
 function BudgetsPage() {
@@ -105,27 +106,60 @@ function BudgetsPage() {
   }
 
 
-
-function App() {
-  return (
-    <Router>
-      <Container className="my-4">
-        <Nav variant="tabs" className="mb-3">
-          <Nav.Item>
-            <Nav.Link as={Link} to="/" className="h1">Budgets</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link as={Link} to="/savings" className="h1">Savings</Nav.Link>
-          </Nav.Item>
-        </Nav>
-
-        <Routes>
-          <Route path="/" element={<BudgetsPage />} />
-          <Route path="/savings" element={<SavingsPage />} />
-        </Routes>
-      </Container>
-    </Router>
-  )
-}
-
-export default App
+  function App() {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      const unsubscribe = auth.onAuthStateChanged((user) => {
+        setUser(user);
+        setLoading(false);
+      });
+  
+      return () => unsubscribe();
+    }, []);
+  
+    const handleLogin = (user) => {
+      setUser(user);
+    };
+  
+    const handleLogout = () => {
+      auth.signOut().then(() => {
+        setUser(null);
+      });
+    };
+  
+    if (loading) {
+      return <div>Loading...</div>;
+    }
+  
+    if (!user) {
+      return <Login onLogin={handleLogin} />;
+    }
+  
+    return (
+      <Router>
+        <Container className="my-4">
+          <Nav variant="tabs" className="mb-3">
+            <Nav.Item>
+              <Nav.Link as={Link} to="/" className="h1">Budgets</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link as={Link} to="/savings" className="h1">Savings</Nav.Link>
+            </Nav.Item>
+            <Nav.Item className="ms-auto">
+              <Button variant="outline-danger" onClick={handleLogout}>Logout</Button>
+            </Nav.Item>
+          </Nav>
+  
+          <Routes>
+            <Route path="/" element={<BudgetsPage />} />
+            <Route path="/savings" element={<SavingsPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Container>
+      </Router>
+    );
+  }
+  
+  export default App;
