@@ -1,14 +1,16 @@
 import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../firebase";
+import { auth, provider, db  } from "../firebase";
 import React, { useState, useEffect } from "react";
 import { Button, Container, Card } from "react-bootstrap";
+import { doc, setDoc, getDoc  } from "firebase/firestore";
 
 function Login({ onLogin }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
+        await ensureUserData(user);
         onLogin(user);
       }
       setLoading(false);
@@ -17,16 +19,37 @@ function Login({ onLogin }) {
     return () => unsubscribe();
   }, [onLogin]);
 
+  const ensureUserData = async (user) => {
+    const userDocRef = doc(db, "users", user.uid);
+    const userDocSnap = await getDoc(userDocRef);
+    if (!userDocSnap.exists()) {
+      await setDoc(userDocRef, { 
+        email: user.email, 
+        createdAt: new Date().toISOString() 
+      });
+      
+      await setDoc(doc(db, "users", user.uid, "globalBudget", "data"), {
+        amount: 0,
+        lastResetDate: new Date().toISOString(),
+      });
+
+      await setDoc(doc(db, 'users', user.uid, 'monthlySalary', 'data'), {
+        amount: 0,
+        lastResetDate: new Date().toISOString(),
+      });
+    }
+  };
+
   const signInWithGoogle = () => {
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
+        await ensureUserData(result.user);
         onLogin(result.user);
       })
       .catch((error) => {
         console.error("Error signing in with Google", error);
       });
   };
-
   if (loading) {
     return <div>Loading...</div>;
   }

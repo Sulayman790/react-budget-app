@@ -25,6 +25,16 @@ export const BudgetsProvider = ({ children }) => {
 
   const loading = loadingBudgets || loadingExpenses || loadingGlobalBudget || loadingMonthlySalary;
 
+  useEffect(() => {
+    console.log('Loading states:', {
+      budgets: loadingBudgets,
+      expenses: loadingExpenses,
+      globalBudget: loadingGlobalBudget,
+      monthlySalary: loadingMonthlySalary
+    });
+    console.log('Overall loading:', loading);
+  }, [loadingBudgets, loadingExpenses, loadingGlobalBudget, loadingMonthlySalary, loading]);
+
   const resetBudgets = useCallback(() => {
     setExpenses([]);
     setBudgets([]);

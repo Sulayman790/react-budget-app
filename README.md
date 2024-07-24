@@ -68,3 +68,15 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+### Idées de fonctionnalités à ajouter 
+
+1. Trie et conservations des factures 
+2. Permettre au payement avec téléphone d'être enregistrer dans l'application de budget
+3. Permettre de mettre différents type de savings (investissement, compte Celi etc..)
+4. Avoir un avatar et des messages personnalisé
+5. Connectez l'application aux comptes bancaires des utilisateurs pour importer automatiquement les transactions et catégoriser les dépenses.
+6. Lire un relevé bancaire pour faire budget
+7. Aider les utilisateurs à définir et suivre des objectifs financiers personnels, comme l'épargne pour des vacances ou le remboursement de dettes
+8. Récompenses et incitations : Intégrer des éléments de gamification, comme des badges et des récompenses pour atteindre des objectifs financiers.
+Challenges communautaires : Proposer des défis de gestion de budget au sein de la communauté d'utilisateurs pour encourager l'engagement.
